@@ -44,7 +44,7 @@ public class SplashActivity extends BaseActivity {
         AnimationSet animationSet = new AnimationSet(false);
 
         //旋转动画
-        RotateAnimation rotateAnimation = new RotateAnimation(0,360,
+        RotateAnimation rotateAnimation = new RotateAnimation(0,720,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(ANIMATION_DURATION);
         animationSet.addAnimation(rotateAnimation);
