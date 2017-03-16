@@ -1,5 +1,6 @@
 package com.example.administrator.zhihuibj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutResId());
         ButterKnife.bind(this);
         init();
+
     }
 
 
-    private void init() {
+    public  void navigateTo(Class activity) {
+        Intent intent = new Intent(this,activity);
+        startActivity(intent);
+        finish();
+
+    }
+
+    public void init() {
 
     }
     public abstract int getLayoutResId();
+
+
+
 }
