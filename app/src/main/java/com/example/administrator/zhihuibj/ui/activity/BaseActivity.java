@@ -1,4 +1,4 @@
-package com.example.administrator.zhihuibj;
+package com.example.administrator.zhihuibj.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

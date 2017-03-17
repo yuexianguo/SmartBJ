@@ -1,4 +1,4 @@
-package com.example.administrator.zhihuibj.ui;
+package com.example.administrator.zhihuibj.ui.activity;
 
 import android.util.Log;
 import android.view.animation.AlphaAnimation;
@@ -8,8 +8,6 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.example.administrator.zhihuibj.BaseActivity;
-import com.example.administrator.zhihuibj.MainActivity;
 import com.example.administrator.zhihuibj.R;
 import com.example.administrator.zhihuibj.utils.SPUtils;
 
