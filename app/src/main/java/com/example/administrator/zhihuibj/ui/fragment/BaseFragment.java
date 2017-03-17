@@ -12,7 +12,9 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2017/3/17.
  */
-
+/**
+ * onCreateView创建Fragment的视图
+ */
 public abstract class BaseFragment extends Fragment {
 
     @Nullable
@@ -28,7 +30,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     public abstract int getLayoutResId();
-    private void init() {
+    public void init() {
 
     }
 
