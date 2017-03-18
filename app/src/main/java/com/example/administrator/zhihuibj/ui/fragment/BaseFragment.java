@@ -30,7 +30,7 @@ public abstract class BaseFragment extends Fragment {
 
 
     public abstract int getLayoutResId();
-    public void init() {
+    protected void init() {
 
     }
 

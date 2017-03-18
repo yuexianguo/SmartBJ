@@ -14,23 +14,49 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
  */
 
 public class MainActivity extends SlidingFragmentActivity {
+
+    private HomeFragment mHomeFragment;
+    private MenuFragment mMenuFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mHomeFragment=new HomeFragment();
+        mMenuFragment = new MenuFragment();
         initLeftMenu();
         initSlidingMenu();
         initContent();
+        initEvent();
     }
+
+    private void initEvent() {
+        //监听homefragment的接口回调，监听发生的tabpage页面的切换
+        mHomeFragment.setOnHomeChangeListener(new HomeFragment.OnHomeChangeListener() {
+            @Override
+            public void OnTabSwitch(int checkId) {
+                //判断是哪个页面
+                if(checkId==R.id.tab_home||checkId==R.id.tab_settings){
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);//不能拉出
+                }else {
+                    getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                }
+            }
+        });
+
+    }
+
+
+
+
     /**
      * 初始化内容区域
      */
     private void initContent() {
         setContentView(R.layout.content_frame);
-        HomeFragment homeFragment = new HomeFragment();
+        mHomeFragment = new HomeFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, homeFragment)
+                .replace(R.id.content_frame, mHomeFragment)
                 .commit();
 
 
@@ -43,7 +69,7 @@ public class MainActivity extends SlidingFragmentActivity {
     private void initSlidingMenu() {
         SlidingMenu sm = getSlidingMenu();
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);//侧滑菜单偏移量
-        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);//设置拉出的位置
         getSlidingMenu().setMode(SlidingMenu.LEFT);//设置左右皆可拉出侧滑菜单
     }
 
@@ -59,8 +85,8 @@ public class MainActivity extends SlidingFragmentActivity {
         setBehindContentView(R.layout.menu_frame);//设置左边侧滑菜单的布局
 
         FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-        MenuFragment menufragment = new MenuFragment();
-        t.replace(R.id.menu_frame, menufragment);
+        mMenuFragment = new MenuFragment();
+        t.replace(R.id.menu_frame, mMenuFragment);
         t.commit();
 
     }
