@@ -2,6 +2,7 @@ package com.example.administrator.zhihuibj.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import com.example.administrator.zhihuibj.R;
 import com.example.administrator.zhihuibj.ui.fragment.HomeFragment;
@@ -33,12 +34,33 @@ public class MainActivity extends SlidingFragmentActivity {
         //监听homefragment的接口回调，监听发生的tabpage页面的切换
         mHomeFragment.setOnHomeChangeListener(new HomeFragment.OnHomeChangeListener() {
             @Override
-            public void OnTabSwitch(int checkId) {
+            public void onTabSwitch(int checkId) {
                 //判断是哪个页面
                 if(checkId==R.id.tab_home||checkId==R.id.tab_settings){
+                    ////如果是切换到首页或者设置中心，则配置侧滑菜单不能拉出
                     getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);//不能拉出
                 }else {
                     getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+                }
+            }
+
+            @Override
+            public void onTabPageMenuClick() {
+                Toast.makeText(MainActivity.this,"tabpage的事件已经从fragment传递到了mainactivity",Toast.LENGTH_SHORT).show();
+                getSlidingMenu().toggle();
+            }
+
+        });
+        //监听菜单按钮关闭侧滑菜单
+        mMenuFragment.setOnMenuChangeListener(new MenuFragment.OnMenuChangeListener() {
+
+
+            @Override
+            public void onMenuItemSwitch(int position,boolean isSwitch) {
+
+                getSlidingMenu().toggle();
+                if(isSwitch){
+                    mHomeFragment.onMenuSwitch(position);
                 }
             }
         });

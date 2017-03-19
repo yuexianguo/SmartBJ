@@ -8,6 +8,11 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.administrator.zhihuibj.R;
+import com.example.administrator.zhihuibj.widget.GovAffairsTabPage;
+import com.example.administrator.zhihuibj.widget.HomeTabPage;
+import com.example.administrator.zhihuibj.widget.NewsCenterTabPage;
+import com.example.administrator.zhihuibj.widget.SettingCenterTabPage;
+import com.example.administrator.zhihuibj.widget.SmartServiceTabPage;
 import com.example.administrator.zhihuibj.widget.TabPage;
 
 import butterknife.BindView;
@@ -22,6 +27,7 @@ public class HomeFragment extends BaseFragment {
     private HomeFragment.OnHomeChangeListener  mOnHomeChangeListener;
     private SparseArray<TabPage> mTabPageSparseArray = new SparseArray<TabPage>();
     private static final String TAG = "HomeFragment";
+    private TabPage mCurrentTabPage;
     @BindView(R.id.tab_page_container)
     FrameLayout mTabPageContainer;
     @BindView(R.id.tab_container)
@@ -46,9 +52,11 @@ public class HomeFragment extends BaseFragment {
                }
                 //确定有人在监听，不为null时候，然后把当前的状态通知给他
                 if(mOnHomeChangeListener!=null){
-                    mOnHomeChangeListener.OnTabSwitch(checkedId);
+                    mOnHomeChangeListener.onTabSwitch(checkedId);
                 }
                 Log.d(TAG, "onCheckedChanged333: "+tabPage);
+
+                mCurrentTabPage=tabPage;
                 //优化，把之前的tabpage移除掉
                 mTabPageContainer.removeAllViews();
                 mTabPageContainer.addView(tabPage);
@@ -60,40 +68,64 @@ public class HomeFragment extends BaseFragment {
 
     @NonNull
     private TabPage getTabPage(int checkedId) {
-        TabPage tabPage;
-        tabPage= new TabPage(getContext());
+
+        TabPage tabPage=null;
         Log.d(TAG, "onCheckedChanged:222 "+tabPage);
         switch (checkedId){
             case R.id.tab_home:
+                tabPage = new HomeTabPage(getContext());
                 tabPage.hide();
                 tabPage.setTitle("首页");
                 break;
             case R.id.tab_news_center:
+                tabPage = new NewsCenterTabPage(getContext());
                 tabPage.setTitle("新闻中心");
                 break;
             case R.id.tab_smart_service:
+                tabPage = new SmartServiceTabPage(getContext());
                 tabPage.setTitle("智慧服务");
                 break;
             case R.id.tab_gov_affairs:
+                tabPage = new GovAffairsTabPage(getContext());
                 tabPage.setTitle("政务");
                 break;
             case R.id.tab_settings:
+                tabPage = new SettingCenterTabPage(getContext());
                 tabPage.hide();
                 tabPage.setTitle("设置中心");
                 break;
         }
         mTabPageSparseArray.put(checkedId,tabPage);
+        //监听从tabPage传过来的侧滑菜单按钮的点击通知，然后接口回调通知MainActivity
+        tabPage.setOnTabPageChangeListener(new TabPage.OnTabPageChangeListener() {
+            
+            public void onTabPageMenuClick() {
+                Log.d(TAG, "onTabPageMenuClick: 监听成功");
+               Toast.makeText(getContext(),"事件从tabpage传递到homefragment",Toast.LENGTH_SHORT).show();
+                if(mOnHomeChangeListener!=null){
+                    mOnHomeChangeListener.onTabPageMenuClick();
+                }
+            }
+        });
         //Toast.makeText(getContext(),"创建一个新的tabpage",Toast.LENGTH_SHORT);
         return tabPage;
+    }
+
+    public void onMenuSwitch(int position) {
+        Toast.makeText(getContext(),"homefragment获得了左侧菜单按钮选项的切换"+position,Toast.LENGTH_SHORT).show();
+        mCurrentTabPage.onMenuSwitch(position);
     }
 
     /**
      * 通知外界发生了tab按钮的切换
      */
     public interface OnHomeChangeListener{
-        void OnTabSwitch(int checkId);
+        void onTabSwitch(int checkId);
+        void onTabPageMenuClick();
     }
     public void setOnHomeChangeListener(HomeFragment.OnHomeChangeListener listener){
         mOnHomeChangeListener=listener;
     }
+
+
 }
