@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.example.administrator.zhihuibj.R;
 import com.example.administrator.zhihuibj.bean.NewsListsBean;
+import com.example.administrator.zhihuibj.netWork.NetworkListener;
 import com.example.administrator.zhihuibj.netWork.SmartBJRequest;
 import com.itheima.pulltorefreshlib.PullToRefreshListView;
 import com.leon.loopviewpagerlib.FunBanner;
@@ -118,12 +117,10 @@ public class NewsPullToRefreshListView extends PullToRefreshListView {
     public void setUrl(String url) {
         mUrl = url;
         //创建请求
-        SmartBJRequest<NewsListsBean> request = new SmartBJRequest<>(Request.Method.GET,
+        SmartBJRequest<NewsListsBean> request = new SmartBJRequest<>(
                 NewsListsBean.class,
                 url,
-                null,
-                mNewsListsBeanListener,
-               mErrorListener
+                mNewsListsBeanListener
                 );
         //发送网络请求：
         Volley.newRequestQueue(getContext()).add(request);
@@ -131,7 +128,22 @@ public class NewsPullToRefreshListView extends PullToRefreshListView {
 
     }
 
-    private Response.Listener<NewsListsBean> mNewsListsBeanListener = new Response.Listener<NewsListsBean>() {
+    private  NetworkListener<NewsListsBean> mNewsListsBeanListener = new NetworkListener<NewsListsBean>(){
+        @Override
+        public void onResponse(NewsListsBean response) {
+            mNewsListsBean =  response;
+            //刷新
+            mBaseAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            super.onErrorResponse(error);
+        }
+    };
+
+
+/*    private Response.Listener<NewsListsBean> mNewsListsBeanListener = new Response.Listener<NewsListsBean>() {
         @Override
         public void onResponse(NewsListsBean response) {
             //Log.d(TAG, "NewsPullToRefreshListVi: "+response.getData().getNews().get(0).getTitle());
@@ -147,5 +159,5 @@ public class NewsPullToRefreshListView extends PullToRefreshListView {
         public void onErrorResponse(VolleyError error) {
 
         }
-    };
+    };*/
 }
