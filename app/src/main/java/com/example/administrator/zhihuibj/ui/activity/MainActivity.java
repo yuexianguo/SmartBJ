@@ -5,10 +5,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.example.administrator.zhihuibj.R;
+import com.example.administrator.zhihuibj.event.TabPageMenuClickEvent;
 import com.example.administrator.zhihuibj.ui.fragment.HomeFragment;
 import com.example.administrator.zhihuibj.ui.fragment.MenuFragment;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Administrator on 2017/3/17.
@@ -28,6 +33,8 @@ public class MainActivity extends SlidingFragmentActivity {
         initSlidingMenu();
         initContent();
         initEvent();
+        EventBus.getDefault().register(this);
+
     }
 
     private void initEvent() {
@@ -111,5 +118,17 @@ public class MainActivity extends SlidingFragmentActivity {
         t.replace(R.id.menu_frame, mMenuFragment);
         t.commit();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN )
+    public void onTabPageMenuClick(TabPageMenuClickEvent event){
+        //通过传递的按钮事件，控制侧滑菜单的打开和关闭
+        getSlidingMenu().toggle();
     }
 }
